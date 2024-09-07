@@ -68,7 +68,7 @@ Here, `User1` owes `480`, `User2` owes `240`, and `User3` owes `240` to `User4`.
 
 ### 2. Show Balances for All Users
 
-**Command format**:
+**Command format**: `SHOW`
 
 Displays all balances between users with non-zero amounts.
 
