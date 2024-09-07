@@ -73,11 +73,11 @@ Here, `User1` owes `480`, `User2` owes `240`, and `User3` owes `240` to `User4`.
 Displays all balances between users with non-zero amounts.
 
 **Example output**:
-User2 owes User1: 620 
-User3 owes User1: 1130
-User1 owes User4: 230 
-User2 owes User4: 240 
-User3 owes User4: 240
+`User2 owes User1: 620` 
+`User3 owes User1: 1130`
+`User1 owes User4: 230` 
+`User2 owes User4: 240` 
+`User3 owes User4: 240`
 
 ### 3. Show Balance for a Single User
 
@@ -88,9 +88,9 @@ User3 owes User4: 240
 Displays balances for the specific user, showing what they owe or are owed.
 
 **Example output**:
-User1 owes User4: 230 
-User2 owes User1: 620 
-User3 owes User1: 1130
+`User1 owes User4: 230`
+`User2 owes User1: 620`
+`User3 owes User1: 1130`
 
 ---
 
