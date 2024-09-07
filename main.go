@@ -9,8 +9,8 @@ import (
 
 // Declare the global variable
 var (
-	Splits models.Split
-	mu     sync.Mutex
+	Passbook models.Passbook
+	mu       sync.Mutex
 )
 
 // Add a Lending or a Borrowing Transaction
@@ -18,18 +18,18 @@ func AddTransaction(lender string, borrower string, amount float64) {
 	mu.Lock()
 	defer mu.Unlock()
 
-	if Splits[lender] == nil {
-		Splits[lender] = make(models.UserLendings)
+	if Passbook[lender] == nil {
+		Passbook[lender] = make(models.Transactions)
 	}
-	Splits[lender][borrower] = amount
+	Passbook[lender][borrower] = amount
 }
 
 // Helper Utility: To view the PassBook for debugging or accounting purposes
-func PrintSplits() {
+func PrintPassbook() {
 	mu.Lock()
 	defer mu.Unlock()
 
-	for user, lendings := range Splits {
+	for user, lendings := range Passbook {
 		fmt.Printf("%s's Balances:\n", user)
 		for otherUser, amount := range lendings {
 			// Check if the amount is negative
@@ -49,12 +49,12 @@ func main() {
 	fmt.Println("Expense Sharing Application (type EXIT to quit)")
 
 	// Initialize the global variable
-	Splits = make(models.Split)
+	Passbook = make(models.Passbook)
 
 	AddTransaction("user1", "user2", 50.0)
 	AddTransaction("user1", "user3", 30.0)
 	AddTransaction("user2", "user1", 20.0)
-	PrintSplits()
+	PrintPassbook()
 	// for {
 	// 	// Display prompt and read input
 	// 	fmt.Print("> ")
