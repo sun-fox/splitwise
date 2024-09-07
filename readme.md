@@ -82,7 +82,7 @@ User3 owes User4: 240
 ### 3. Show Balance for a Single User
 
 **Command format**:
-SHOW <user-id>
+`SHOW <user-id>`
 
 
 Displays balances for the specific user, showing what they owe or are owed.
@@ -91,6 +91,7 @@ Displays balances for the specific user, showing what they owe or are owed.
 User1 owes User4: 230 
 User2 owes User1: 620 
 User3 owes User1: 1130
+
 ---
 
 ## Optional Features
