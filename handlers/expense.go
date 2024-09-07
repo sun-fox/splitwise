@@ -16,7 +16,7 @@ func HandleExpense(args []string) {
 	payer := args[0]
 	amountStr := args[1]
 	numUsersStr := args[2]
-	users := args[3 : 3+strings.Count(args[2], " ")]
+	users := args[3 : 3+strings.Count(numUsersStr, " ")]
 	expenseType := args[3+len(users)]
 
 	amount, err := strconv.ParseFloat(amountStr, 64)
