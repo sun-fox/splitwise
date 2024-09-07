@@ -1,108 +1,163 @@
-Expense Sharing Application
-Overview
-This application helps users manage and split expenses among a group of people. Each user can add expenses, select how to split them (equally, exactly, or by percentage), and the app will keep track of who owes whom and by how much.
+# Expense Sharing Application
 
-Features
-User Management: Create and manage user profiles.
-Expense Management: Add expenses and split them among users.
-Balance Tracking: View balances and transactions for users.
-Flexible Splitting Options: Split expenses equally, exactly, or by percentage.
-Requirements
-User
-Each user should have the following attributes:
+This application allows users to add, split, and manage shared expenses among multiple participants. It helps track balances between users, displaying how much each person owes or is owed by others.
 
-userId: Unique identifier
-name: Full name
-email: Email address
-mobile number: Contact number
-Expense
-Expenses can be split in three ways:
+## Features
 
-EQUAL: Split the expense equally among all selected users.
-EXACT: Specify exact amounts for each user.
-PERCENT: Specify percentage shares for each user (should total 100%).
-Validation
-Percent Split: Verify that the total percentage is 100.
-Exact Split: Verify that the total amount matches the specified amounts.
-Rounding
-Amounts should be rounded to two decimal places. For example, if an amount is split equally among three users, one user might get slightly more than the others to ensure the total amount is accurate.
+- Users can add expenses and split them equally, by exact amounts, or by percentages.
+- Users can view their balances with others.
+- Validation for percentages and exact amounts.
+- Support for expense names, notes, and images (optional).
+- Option to split by shares, where a user can represent more than one person.
+- Ability to simplify transactions to reduce complexity between balances.
 
-Inputs
-Creating Users
-You can create users in the main method. Example:
+## Table of Contents
 
-bash
-Copy code
-User1 (id: u1)
-User2 (id: u2)
-User3 (id: u3)
-User4 (id: u4)
-Adding Expenses
-Expenses are recorded using the following format:
+- [Usage](#usage)
+- [Expense Types](#expense-types)
+- [Commands](#commands)
+- [Optional Features](#optional-features)
+- [Sample Input/Output](#sample-inputoutput)
 
-php
-Copy code
-EXPENSE <user-id-of-person-who-paid> <no-of-users> <space-separated-list-of-users> <EQUAL/EXACT/PERCENT> <space-separated-values-in-case-of-non-equal>
-Viewing Balances
-For All Users:
+---
 
-sql
-Copy code
-SHOW
-For a Single User:
+## Usage
 
-sql
-Copy code
-SHOW <user-id>
-Output
-For Single User
-When showing balances for a single user, output balances where the user is involved:
+To run the application, create some users and add expenses for them. Each user should have a unique ID, name, email, and mobile number. You can then input expenses and view balances using the supported commands.
 
-php
-Copy code
-<user-id-of-x> owes <user-id-of-y>: <amount>
-If there are no balances, print:
+## Expense Types
 
-yaml
-Copy code
-No balances
-If the user owes money, they’ll be listed as <user-id-of-x>. If they are owed money, they’ll be <user-id-of-y>.
+1. **EQUAL**: The expense is split equally among the participants.
+2. **EXACT**: Each participant owes a specific amount.
+3. **PERCENT**: Each participant pays a percentage of the total amount.
+4. **SHARE** (Optional): Some users may represent more than one person when splitting expenses.
 
-Optional Features
-Expense Name and Notes: Add names, notes, or images to expenses.
-Share Splitting: Split expenses by specified shares (e.g., SHARE 2 1 1 1).
-Passbook: View a list of all transactions a user was part of.
-Simplify Expenses: Simplify balances to reduce the number of transactions. For example, if User1 owes User2, and User2 owes User3, it could be simplified to User1 owing User3 directly.
-Examples
-Example 1: Equal Split
-Input:
+---
 
-yaml
-Copy code
-u1 1000 4 u1 u2 u3 u4 EQUAL
-Output:
+## Commands
 
-User2 owes User1: 250
-User3 owes User1: 250
-User4 owes User1: 250
-Example 2: Exact Split
-Input:
+### 1. Adding an Expense
 
-yaml
-Copy code
-u1 1250 2 u2 u3 EXACT 370 880
-Output:
+**Command format**:
+- `EXPENSE <user-id-of-person-who-paid> <no-of-users> <space-separated-list-of-users> <EQUAL/EXACT/PERCENT> <optional-share-values>`
 
-User2 owes User1: 370
-User3 owes User1: 880
-Example 3: Percent Split
-Input:
+- `<user-id-of-person-who-paid>`: ID of the user who paid.
+- `<no-of-users>`: The number of users sharing the expense.
+- `<space-separated-list-of-users>`: List of user IDs involved in the expense.
+- `<EQUAL/EXACT/PERCENT>`: The type of split.
+- `<optional-share-values>`: (For EXACT or PERCENT only) Values representing how much each user owes.
 
-sql
-Copy code
-u4 1200 4 u1 u2 u3 u4 PERCENT 40 20 20 20
-Output:
+**Examples**:
+1. Split equally among 4 users:
 
-User1 owes User4: 480
-User2 owes User4: 240
+- `EXPENSE u1 1000 4 u1 u2 u3 u4 EQUAL`
+
+Here, each user owes `250` to `User1`.
+
+2. Split by exact amounts:
+
+- `EXPENSE u1 1250 2 u2 u3 EXACT 370 880`
+
+Here, `User2` owes `370` and `User3` owes `880` to `User1`.
+
+3. Split by percentages:
+
+- `EXPENSE u4 1200 4 u1 u2 u3 u4 PERCENT 40 20 20 20`
+
+Here, `User1` owes `480`, `User2` owes `240`, and `User3` owes `240` to `User4`.
+
+### 2. Show Balances for All Users
+
+**Command format**:
+
+Displays all balances between users with non-zero amounts.
+
+**Example output**:
+User2 owes User1: 620 
+User3 owes User1: 1130
+User1 owes User4: 230 
+User2 owes User4: 240 
 User3 owes User4: 240
+
+### 3. Show Balance for a Single User
+
+**Command format**:
+SHOW <user-id>
+
+
+Displays balances for the specific user, showing what they owe or are owed.
+
+**Example output**:
+User1 owes User4: 230 
+User2 owes User1: 620 
+User3 owes User1: 1130
+---
+
+## Optional Features
+
+1. **Expense Name, Notes, and Images**:
+   - Add a descriptive name or notes while adding expenses.
+   
+2. **Split by Share**:
+   - Instead of using percentages, split by shares where each user represents more than one person.
+   - **Command format**:
+     ```
+     EXPENSE <user-id> <amount> <no-of-users> <space-separated-list-of-users> SHARE <share-values>
+     ```
+   - **Example**:
+     ```
+     EXPENSE u4 1200 4 u1 u2 u3 u4 SHARE 2 1 1 1
+     ```
+
+3. **Simplify Balances**:
+   - When simplify is turned on, the app reduces the number of transactions between users.
+   - Example: If `User1` owes `250` to `User2` and `User2` owes `200` to `User3`, the system simplifies it to `User1` owes `50` to `User2` and `200` to `User3`.
+
+4. **Show Passbook**:
+   - Display all past transactions a user was part of.
+
+---
+
+## Sample Input/Output
+
+### Input
+`EXPENSE u1 1000 4 u1 u2 u3 u4 EQUAL EXPENSE u1 1250 2 u2 u3 EXACT 370 880 EXPENSE u4 1200 4 u1 u2 u3 u4 PERCENT 40 20 20 20 SHOW SHOW u1`
+
+### Output
+For `SHOW`:
+User2 owes User1: 620 
+User3 owes User1: 1130 
+User1 owes User4: 230 
+User2 owes User4: 240 
+User3 owes User4: 240
+
+For `SHOW u1`:
+User2 owes User1: 620 
+User3 owes User1: 1130 
+User1 owes User4: 230
+---
+
+## Validations
+
+1. **Percentage Validation**:
+   - Ensure that the sum of percentages in a `PERCENT` expense equals 100.
+   
+2. **Exact Amount Validation**:
+   - Ensure that the sum of the amounts in an `EXACT` expense equals the total amount.
+
+3. **Rounding**:
+   - Round off amounts to two decimal places.
+
+---
+
+## Future Enhancements
+
+- Add user authentication.
+- Enable filtering of passbook by date range.
+- Include notification system for dues reminders.
+
+---
+
+Feel free to build and expand this application as per your requirements!
+
+--- 
