@@ -61,10 +61,7 @@ func (bm *BalanceManager) ShowUserBalance(userID string) {
 			if borrower == userID && amount > 0 {
 				fmt.Printf("%s owes %s: %.2f\n", borrower, lender, amount)
 				found = true
-			} else if lender == userID && amount < 0 {
-				fmt.Printf("%s owes %s: %.2f\n", borrower, lender, -amount)
-				found = true
-			}
+			} 
 		}
 	}
 	if !found {
