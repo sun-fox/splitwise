@@ -45,6 +45,11 @@ func (em *ExpenseManager) AddExpense(paidBy string, amount float64, users []stri
 			}
 		}
 	case EXACT:
+		sum := 0.0
+		for _, v := range amounts { sum += v }
+		if sum != amount{
+			return errors.New("the splits dont add up to the bill amount")
+		}
 		for i, user := range users {
 			if user != paidBy {
 				em.Balances.UpdateBalance(paidBy, user, amounts[i])
