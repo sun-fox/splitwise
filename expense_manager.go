@@ -51,6 +51,11 @@ func (em *ExpenseManager) AddExpense(paidBy string, amount float64, users []stri
 			}
 		}
 	case PERCENT:
+		sum := 0.0
+		for _, v := range amounts { sum += v }
+		if sum != 100.0{
+			return errors.New("invalid Percentage Split")
+		}
 		for i, user := range users {
 			if user != paidBy {
 				splitAmount := amount * (amounts[i] / 100)
