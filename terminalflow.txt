@@ -1,0 +1,35 @@
+Expense Sharing Application (type EXIT to quit)
+> ADDUSER sunny sunny.singh sunny.singh@gmail.com 1234578690
+> ADDUSER aman aman.singh aman.singh@gmail.com 1234567890
+> ADDUSER victor victor.dale victor.dale@gmail.com 1335080130
+> EXPENSE sunny 8000 2 sunny aman EQUAL
+> EXPENSE aman 3000 2 victor sunny EXACT 1000 2000
+> SHOW
+victor owes aman: 1000.00
+aman owes sunny: 2000.00
+> EXPENSE victor 10000 victor aman sunny PERCENTAGE 40 30 30
+Error: invalid split type
+> EXPENSE victor 10000 3 victor aman sunny PERCENTAGE 40 30 30 
+Error: invalid split type
+> EXPENSE victor 10000 3 victor aman sunny PERCENT 40 30 30    
+> SHOW 
+aman owes sunny: 2000.00
+aman owes victor: 2000.00
+sunny owes victor: 3000.00
+> SHOW sunny
+sunny owes victor: 3000.00
+victor owes sunny: 3000.00
+> SHOW aman
+aman owes sunny: 2000.00
+aman owes victor: 2000.00
+sunny owes aman: 2000.00
+victor owes aman: 2000.00
+> EXPENSE aman 1000 3 aman victor max EQUAL
+Error: one or more users do not exist
+> EXPENSE aman 1000 3 aman victor sunny PERCENTAGE 20 20 50 
+Error: invalid split type
+> EXPENSE aman 1000 3 aman victor sunny PERCENT 20 20 50
+> SHOW
+aman owes sunny: 1500.00
+aman owes victor: 1800.00
+sunny owes victor: 3000.00
