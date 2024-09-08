@@ -1,71 +1,75 @@
 package main
 
 import (
+	"bufio"
 	"fmt"
-	"sync"
-
-	"github.com/sun-fox/splitwise/models"
+	"os"
+	"strings"
 )
 
-// Declare the global variable
-var (
-	Passbook models.Passbook
-	mu       sync.Mutex
-)
+// Handle commands: EXPENSE, SHOW, SHOW <user-id>
+func handleCommand(em *ExpenseManager, command string) {
+	args := strings.Split(command, " ")
 
-// Add a Lending or a Borrowing Transaction
-func AddTransaction(lender string, borrower string, amount float64) {
-	mu.Lock()
-	defer mu.Unlock()
+	switch args[0] {
+	case "EXPENSE":
+		paidBy := args[1]
+		amount := toFloat(args[2])
+		numUsers := toInt(args[3])
+		users := args[4 : 4+numUsers]
+		splitType := SplitType(args[4+numUsers])
 
-	if Passbook[lender] == nil {
-		Passbook[lender] = make(models.Transactions)
-	}
-	Passbook[lender][borrower] = amount
-}
-
-// Helper Utility: To view the PassBook for debugging or accounting purposes
-func PrintPassbook() {
-	mu.Lock()
-	defer mu.Unlock()
-
-	for user, lendings := range Passbook {
-		fmt.Printf("%s's Balances:\n", user)
-		for otherUser, amount := range lendings {
-			// Check if the amount is negative
-			if amount < 0 {
-				// Exchange lender and borrower and print the positive amount
-				fmt.Printf("  %s owes %s: %.2f\n", otherUser, user, -amount)
-			} else {
-				fmt.Printf("  %s owes %s: %.2f\n", otherUser, user, amount)
+		var amounts []float64
+		if splitType != EQUAL {
+			for _, v := range args[5+numUsers:] {
+				amounts = append(amounts, toFloat(v))
 			}
 		}
+		err := em.AddExpense(paidBy, amount, users, splitType, amounts)
+		if err != nil {
+			fmt.Println("Error:", err)
+		}
+	case "SHOW":
+		if len(args) == 1 {
+			em.Balances.ShowBalances()
+		} else {
+			userID := args[1]
+			em.Balances.ShowUserBalance(userID)
+		}
+	case "ADDUSER":
+		if len(args) != 5{
+			fmt.Println("Invalid Command")
+		}else{
+			userId := args[1]
+			userName := args[2]
+			userEmailID := args[3]
+			userPhoneNo := args[4]
+			em.AddUser(userId, userName, userEmailID, userPhoneNo)
+		}
+	default:
+		fmt.Println("Invalid command")
 	}
 }
 
-// Main function to run the application
+
+// Main method to simulate usage
 func main() {
-	// reader := bufio.NewReader(os.Stdin)
+	em := NewExpenseManager()
+
+	reader := bufio.NewReader(os.Stdin)
 	fmt.Println("Expense Sharing Application (type EXIT to quit)")
 
-	// Initialize the global variable
-	Passbook = make(models.Passbook)
+	for {
+		// Display prompt and read input
+		fmt.Print("> ")
+		input, err := reader.ReadString('\n')
+		if err != nil {
+			fmt.Println("Error reading input:", err)
+			continue
+		}
 
-	AddTransaction("user1", "user2", 50.0)
-	AddTransaction("user1", "user3", 30.0)
-	AddTransaction("user2", "user1", 20.0)
-	PrintPassbook()
-	// for {
-	// 	// Display prompt and read input
-	// 	fmt.Print("> ")
-	// 	input, err := reader.ReadString('\n')
-	// 	if err != nil {
-	// 		fmt.Println("Error reading input:", err)
-	// 		continue
-	// 	}
-
-	// 	// Trim the newline character and handle the command
-	// 	input = strings.TrimSpace(input)
-	// 	handleCommand(input)
-	// }
+		// Trim the newline character and handle the command
+		input = strings.TrimSpace(input)
+		handleCommand(em, input)
+	}
 }
