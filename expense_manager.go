@@ -20,12 +20,7 @@ func NewExpenseManager() *ExpenseManager {
 
 // Add a user
 func (em *ExpenseManager) AddUser(id, name, email, phone string) {
-	em.Users[id] = User{
-		ID:    id,
-		Name:  name,
-		Email: email,
-		Phone: phone,
-	}
+	em.Users[id] = NewUser(id, name, email, phone)
 }
 
 // Add an expense and update balances
@@ -37,13 +32,7 @@ func (em *ExpenseManager) AddExpense(paidBy string, amount float64, users []stri
 		}
 	}
 
-	expense := Expense{
-		PaidBy:  paidBy,
-		Amount:  amount,
-		Users:   users,
-		Split:   splitType,
-		Amounts: amounts,
-	}
+	expense := NewExpense(paidBy, amount, users, splitType, amounts)
 	em.Expenses = append(em.Expenses, expense)
 
 	// Split logic
